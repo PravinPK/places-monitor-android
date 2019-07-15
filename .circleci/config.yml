@@ -1,4 +1,7 @@
 version: 2.0
+dependencies:
+  pre:
+    - source environmentSetup.sh && copyEnvVarsToGradleProperties
 orbs:
   codecov: codecov/codecov@1.0.2
 jobs:
@@ -10,17 +13,24 @@ jobs:
       JVM_OPTS: -Xmx3200m
     steps:
       - checkout
-      # - restore_cache:
-      #     key: jars-{{ checksum "code/build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - restore_cache:
+          key: jars-{{ checksum "code/build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: ChmodPermssion
           command: sudo chmod +x code/gradlew  
       - run:
-          name: Javadoc
-          command: code/gradlew -q -p code/places-monitor-android javadocPublic       
+          name: Path
+          command: pwd    
+      # - run:
+      #     name: Javadoc
+      #     command: code/gradlew -q -p code/places-monitor-android javadocPublic       
+      # - run:
+      #     name: Build
+      #     command: code/gradlew -p code/places-monitor-android assemblePhoneCoreBundleDebug
+      # - run:
+      #     name: UnitTests
+      #     command: code/gradlew -p code/places-monitor-android platformUnitTestJacocoReport
       - run:
-          name: Build
-          command: code/gradlew -p code/places-monitor-android assemblePhoneCoreBundleDebug
-      - run:
-          name: UnitTests
-          command: code/gradlew -p code/places-monitor-android platformUnitTestJacocoReport
+          name: Artifactory Publish
+          command: code/gradlew -p code/places-monitor-android artifactoryPublish
+ 
