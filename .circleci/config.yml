@@ -13,14 +13,23 @@ jobs:
       JVM_OPTS: -Xmx3200m
     steps:
       - checkout
-      - restore_cache:
-          key: jars-{{ checksum "code/build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: ChmodPermssion
           command: sudo chmod +x code/gradlew  
       - run:
           name: Path
-          command: pwd    
+          command: pwd 
+      - run:
+          name: CircleCIBranch
+          command: echo $CIRCLE_BRANCH 
+            
+      # - run:
+      #     name: Echo
+      #     command: cd $HOME/code && cd code && ls && echo "$(cat gradle.properties)"
+      - run:
+          name: ScriptRun 
+          command: source environmentSetup.sh && copyEnvVarsToGradleProperties
+
       # - run:
       #     name: Javadoc
       #     command: code/gradlew -q -p code/places-monitor-android javadocPublic       
