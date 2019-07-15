@@ -10,6 +10,7 @@ function copyEnvVarsToGradleProperties {
         echo "Gradle Properties does not exist"
     fi
      echo "Writing TEST_API_KEY to gradle.properties..."
+     echo "Wrtiting artifactoryUrl=$artifactoryUrl.."
      echo "artifactoryUrl=$artifactoryUrl" >> $GRADLE_PROPERTIES
      echo "artifactoryContextUrl=$artifactoryContextUrl" >> $GRADLE_PROPERTIES
      echo "artifactorySnapshotUrl=$artifactorySnapshotUrl" >> $GRADLE_PROPERTIES
