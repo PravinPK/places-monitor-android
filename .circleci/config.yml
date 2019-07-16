@@ -61,7 +61,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - testingCI
           type: approval
           requires:
            - test
