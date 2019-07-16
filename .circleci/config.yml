@@ -51,12 +51,19 @@ jobs:
 
 workflows:
  version: 2
- everydayWorkflow:
+ build_test_deploy:
    jobs:
-     - build
+     - build:
      - test:
          requires:
            - build
+     - hold:
+         type: approval
+         requires:
+           - test      
      - deploy:
          requires:
-           - test
+           - hold
+         filters:
+            branches:
+              only: testingCI  
