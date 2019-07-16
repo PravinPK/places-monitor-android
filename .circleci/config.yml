@@ -8,33 +8,55 @@ jobs:
       JVM_OPTS: -Xmx3200m
     steps:
       - checkout
-      - run:
-          name: ChmodPermssion
-          command: sudo chmod +x code/gradlew  
-      - run:
-          name: Path
-          command: pwd 
-      - run:
-          name: CircleCIBranch
-          command: echo $CIRCLE_BRANCH 
-            
       # - run:
-      #     name: Echo
-      #     command: cd $HOME/code && cd code && ls && echo "$(cat gradle.properties)"
-      - run:
-          name: ScriptRun 
-          command: source environmentSetup.sh && copyEnvVarsToGradleProperties
-
+      #     name: ChmodPermssion
+      #     command: sudo chmod +x code/gradlew  
       # - run:
       #     name: Javadoc
       #     command: code/gradlew -q -p code/places-monitor-android javadocPublic       
       # - run:
       #     name: Build
       #     command: code/gradlew -p code/places-monitor-android assemblePhoneCoreBundleDebug
+      - run:
+          name: Build
+          command: echo BuildSuccessfullll
+  test:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - run:
+          name: test
+          command: echo testSuccessfull
       # - run:
       #     name: UnitTests
       #     command: code/gradlew -p code/places-monitor-android platformUnitTestJacocoReport
+  deploy:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      # - run:
+      #     name: Bintray Upload
+      #     command: code/gradlew -p code/places-monitor-android bintrayUpload -PapiKey=0ba8e3246027e34d70511583e5c72b103d3cedf7    
       - run:
-          name: Artifactory Publish
-          command: code/gradlew -p code/places-monitor-android artifactoryPublish
- 
+          name: deploy
+          command: echo deploySuccessfulll
+
+workflows:
+ version: 2
+ everydayWorkflow:
+   jobs:
+     - build
+     - test:
+         requires:
+           - build
+     - deploy:
+         requires:
+           - test

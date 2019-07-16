@@ -144,7 +144,7 @@ publishing {
         aar(MavenPublication) {
             groupId = 'com.adobe.marketing.mobile'
             artifactId = rootProject.moduleName
-            version = rootProject.mouduleVersion
+            version = rootProject.moduleVersion
             artifact("$buildDir/outputs/aar/${moduleAARName}")
             artifact javadocPublish
             pom.withXml {
@@ -178,9 +178,9 @@ publishing {
             groupId = 'com.adobe.marketing.mobile'
             artifactId = rootProject.moduleName
             if (project.hasProperty("isMaster")) {
-                version = rootProject.mouduleVersion + '-internal'
+                version = rootProject.moduleVersion + '-internal'
             } else {
-                version = rootProject.mouduleVersion + '-SNAPSHOT'
+                version = rootProject.moduleVersion + '-SNAPSHOT'
             }
             artifact("$buildDir/outputs/aar/${moduleAARName}")
             artifact javadocPublish
@@ -218,6 +218,36 @@ publishing {
 artifactoryPublish {
     publications(publishing.publications.aarSnapshot)
 }
+
+bintray {
+    user = 'sdkci'
+    //This apiKey is passed as a gradle parameter to the task
+    //from the Jenkins Pipeline.
+    if (project.hasProperty("apiKey")) {
+        key = "$apiKey"
+    } else {
+        key = "5d7997918972152a19d8ad401016a54b5eaeca3e"
+    }
+
+    dryRun = false
+    pkg {
+        repo = "mobileservicesdk"
+        name = mavenRepoName
+        userOrg = "eaps"
+        version {
+            name = rootProject.moduleVersion
+            desc = mavenRepoDescription
+            gpg {
+                sign = true
+                passphrase = 'adobe-sonatype'
+            }
+        }
+    }
+
+    publications = ['aar']
+}
+
+bintrayUpload.dependsOn('assemblePhone')
 
 
 configurations.all {
