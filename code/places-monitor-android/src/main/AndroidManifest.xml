@@ -15,5 +15,8 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name="com.adobe.marketing.mobile.PlacesActivity"
+            android:theme="@style/Theme.Transparent"/>
     </application>
 </manifest>
